@@ -76,6 +76,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("query")
     parser.add_argument("--debug", action="store_true", help="Print debug output")
+    parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     DEBUG = args.debug
@@ -96,4 +97,5 @@ if __name__ == "__main__":
         f"Going to ID {ids_arr[sorted_match[0]]}, title {names_arr[sorted_match[0]]}"
     )
 
-    visit_id(ids[sorted_match[0]])
+    if not args.dry_run:
+        visit_id(ids[sorted_match[0]])
