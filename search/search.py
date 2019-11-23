@@ -85,13 +85,15 @@ if __name__ == "__main__":
     # execute_line("firefox")
 
     ids, names, classes = get_all_windows(root)
-    ids = np.array(ids)
-    names = np.array(names)
+    ids_arr: np.array = np.array(ids)
+    names_arr: np.array = np.array(names)
 
-    sorted_match = best_match(args.query, classes, names)
+    sorted_match = best_match(args.query, classes, names_arr)
 
-    _debug_print(f"Found IDs and names (sorted): {ids[sorted_match]}")
-    _debug_print(f"Found names: {names[sorted_match])}")
-    _debug_print(f"Going to ID {ids[sorted_match[0]]}, title {names[sorted_match[0]]}")
+    _debug_print(f"Found IDs and names (sorted): {ids_arr[sorted_match]}")
+    _debug_print(f"Found names: {names_arr[sorted_match]}")
+    _debug_print(
+        f"Going to ID {ids_arr[sorted_match[0]]}, title {names_arr[sorted_match[0]]}"
+    )
 
     visit_id(ids[sorted_match[0]])
