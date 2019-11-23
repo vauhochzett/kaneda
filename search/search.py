@@ -34,19 +34,17 @@ def get_all_windows(root):
     _debug_print("Listing found windows...")
 
     for child in root.query_tree().children:
-        _debug_print(f"[CHILD] {child.get_wm_name()}")
+        _debug_print(f"\n[CHILD] {child.get_wm_name()} – {child.id}")
         grandchildren = child.query_tree().children
         for grandchild in grandchildren:
             name = grandchild.get_wm_name()
-            _debug_print(f"  > {name}")
+            _debug_print(f"  > {name} – {grandchild.id}")
             if name and "search.py " not in name:
-                _debug_print(f"{grandchild.get_wm_name()} – {grandchild.id}")
                 names.append(name)
                 class_tuple = grandchild.get_wm_class()
                 classes.append(class_tuple[0] + class_tuple[1])
                 ids.append(grandchild.id)
                 # _debug_print(grandchild.query_tree())
-        _debug_print("")
 
     return ids, names, classes
 
