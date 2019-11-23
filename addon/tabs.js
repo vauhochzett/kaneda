@@ -44,7 +44,7 @@ function listTabs() {
 document.addEventListener("DOMContentLoaded", listTabs);
 
 function getCurrentWindowTabs() {
-  return browser.tabs.query({currentWindow: true});
+  return browser.tabs.query({ currentWindow: true });
 }
 
 document.addEventListener("click", (e) => {
@@ -56,7 +56,7 @@ document.addEventListener("click", (e) => {
         }
       }
     });
-}
+  }
 
   if (e.target.id === "tabs-move-beginning") {
     callOnActiveTab((tab, tabs) => {
@@ -65,7 +65,7 @@ document.addEventListener("click", (e) => {
         index = firstUnpinnedTab(tabs);
       }
       console.log(`moving ${tab.id} to ${index}`)
-      browser.tabs.move([tab.id], {index});
+      browser.tabs.move([tab.id], { index });
     });
   }
 
@@ -76,7 +76,7 @@ document.addEventListener("click", (e) => {
         var lastPinnedTab = Math.max(0, firstUnpinnedTab(tabs) - 1);
         index = lastPinnedTab;
       }
-      browser.tabs.move([tab.id], {index});
+      browser.tabs.move([tab.id], { index });
     });
   }
 
@@ -99,18 +99,18 @@ document.addEventListener("click", (e) => {
   }
 
   else if (e.target.id === "tabs-create") {
-    browser.tabs.create({url: "https://developer.mozilla.org/en-US/Add-ons/WebExtensions"});
+    browser.tabs.create({ url: "https://developer.mozilla.org/en-US/Add-ons/WebExtensions" });
   }
 
   else if (e.target.id === "tabs-create-reader") {
-    browser.tabs.create({url: "https://developer.mozilla.org/en-US/Add-ons/WebExtensions", openInReaderMode: true});
+    browser.tabs.create({ url: "https://developer.mozilla.org/en-US/Add-ons/WebExtensions", openInReaderMode: true });
   }
 
   else if (e.target.id === "tabs-alertinfo") {
     callOnActiveTab((tab) => {
       let props = "";
       for (let item in tab) {
-        props += `${ item } = ${ tab[item] } \n`;
+        props += `${item} = ${tab[item]} \n`;
       }
       alert(props);
     });
@@ -174,7 +174,7 @@ document.addEventListener("click", (e) => {
       for (var tab of tabs) {
         if (tab.id === tabId) {
           browser.tabs.update(tabId, {
-              active: true
+            active: true
           });
         }
       }
@@ -188,7 +188,7 @@ document.addEventListener("click", (e) => {
 browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
   console.log(`The tab with id: ${tabId}, is closing`);
 
-  if(removeInfo.isWindowClosing) {
+  if (removeInfo.isWindowClosing) {
     console.log(`Its window is also closing.`);
   } else {
     console.log(`Its window is not closing`);
