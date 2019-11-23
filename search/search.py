@@ -89,9 +89,9 @@ if __name__ == "__main__":
 
     sorted_match = best_match(args.query, classes, names_arr)
 
-    ids_names_matrix: np.vstack = np.vstack([ids_arr, names_arr]).T
+    ids_names_matrix: np.vstack = np.vstack([ids_arr, names_arr, np.array(classes)]).T
 
-    _debug_print(f"Found IDs and names (sorted): \n{ids_names_matrix}")
+    _debug_print(f"Found IDs / names / classes (sorted): \n{ids_names_matrix}")
     _debug_print(
         f"Going to ID {ids_arr[sorted_match[0]]}, title {names_arr[sorted_match[0]]}"
     )
