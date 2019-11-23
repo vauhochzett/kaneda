@@ -90,8 +90,8 @@ if __name__ == "__main__":
 
     sorted_match = best_match(args.query, classes, names_arr)
 
-    _debug_print(f"Found IDs and names (sorted): {ids_arr[sorted_match]}")
-    _debug_print(f"Found names: {names_arr[sorted_match]}")
+    _debug_print(f"Found IDs (sorted): {ids_arr[sorted_match]}")
+    _debug_print(f"Found names (sorted): {names_arr[sorted_match]}")
     _debug_print(
         f"Going to ID {ids_arr[sorted_match[0]]}, title {names_arr[sorted_match[0]]}"
     )
