@@ -40,7 +40,15 @@ function redirect(requestDetails) {
   // var reqArr = requestDetails.url.split("/");
   // var tabId = reqArr[3];
 
-  browser.tabs.create({ url: "https://github.com/" });
+  browser.tabs.query({})
+    .then((tabs) => {
+      let numId = tabs[5].id;
+      browser.tabs.update(numId, { active: true });
+      // if (type === OTHER_WINDOW_TAB_TYPE) {
+      //   focusWindow(windowId);
+      // }
+      // window.close();
+    });
 
 
   return {
