@@ -20,17 +20,20 @@ def get_all_windows(root):
     for child in root.query_tree().children:
         for grandchild in child.query_tree().children:
             name = grandchild.get_wm_name()
-            if name:
+            if name and "search.py " not in name:
                 print(f"{grandchild.get_wm_name()} – {grandchild.id}")
                 names.append(name)
-                classes.append(grandchild.get_wm_class())
+                class_tuple = (grandchild.get_wm_class())
+                classes.append(class_tuple[0] + class_tuple[1])
                 ids.append(grandchild.id)
                 #print(grandchild.query_tree())
     return ids, names, classes
 
 def best_match(word, classes, names):
-    ratio_classes = list(map(lambda name: fuzz.ratio(word, name), classes))
-    ratio_names = list(map(lambda name: fuzz.ratio(word, name), names))
+    word = word.lower()
+    print(classes)
+    ratio_classes = list(map(lambda name: fuzz.partial_ratio(word, name.lower()), classes))
+    ratio_names = list(map(lambda name: fuzz.partial_ratio(word, name), names))
 
     total_ratio = np.array(ratio_classes) + np.array(ratio_names)
 
@@ -62,6 +65,6 @@ if __name__ == '__main__':
     print(ids[sorted_match])
     print(names[sorted_match])
     print("Going to")
-    print(ids[sorted_match[1]])
-    print(names[sorted_match[1]])
-    visit_id(ids[sorted_match[1]])
+    print(ids[sorted_match[0]])
+    print(names[sorted_match[0]])
+    visit_id(ids[sorted_match[0]])
