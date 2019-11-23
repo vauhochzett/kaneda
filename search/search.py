@@ -89,9 +89,9 @@ if __name__ == "__main__":
     names = np.array(names)
 
     sorted_match = best_match(args.query, classes, names)
-    _debug_print(ids[sorted_match])
-    _debug_print(names[sorted_match])
-    _debug_print("Going to")
-    _debug_print(ids[sorted_match[0]])
-    _debug_print(names[sorted_match[0]])
+
+    _debug_print(f"Found IDs and names (sorted): {ids[sorted_match]}")
+    _debug_print(f"Found names: {names[sorted_match])}")
+    _debug_print(f"Going to ID {ids[sorted_match[0]]}, title {names[sorted_match[0]]}")
+
     visit_id(ids[sorted_match[0]])
