@@ -7,6 +7,13 @@ import numpy as np
 from fuzzywuzzy import fuzz
 from Xlib import display
 
+DEBUG = False
+
+
+def _debug_print(*args, **kwargs):
+    if DEBUG:
+        print(*args, **kwargs)
+
 
 def get_available_programs(contains=""):
     available_programs_str = os.popen(
@@ -15,8 +22,8 @@ def get_available_programs(contains=""):
         + "'"
     ).read()
     available_programs = available_programs_str.split("\n")
+    _debug_print(f"Returning available program: {available_programs[:-1]}")
     return available_programs[:-1]
-    # print(available_programs[:-1])
 
 
 def get_all_windows(root):
@@ -24,22 +31,29 @@ def get_all_windows(root):
     classes = []
     ids = []
 
+    _debug_print("Listing found windows...")
+
     for child in root.query_tree().children:
-        for grandchild in child.query_tree().children:
+        _debug_print(f"[CHILD] {child.get_wm_name()}")
+        grandchildren = child.query_tree().children
+        for grandchild in grandchildren:
             name = grandchild.get_wm_name()
+            _debug_print(f"  > {name}")
             if name and "search.py " not in name:
-                print(f"{grandchild.get_wm_name()} – {grandchild.id}")
+                _debug_print(f"{grandchild.get_wm_name()} – {grandchild.id}")
                 names.append(name)
                 class_tuple = grandchild.get_wm_class()
                 classes.append(class_tuple[0] + class_tuple[1])
                 ids.append(grandchild.id)
-                # print(grandchild.query_tree())
+                # _debug_print(grandchild.query_tree())
+        _debug_print("")
+
     return ids, names, classes
 
 
 def best_match(word, classes, names):
     word = word.lower()
-    print(classes)
+    _debug_print(classes)
     ratio_classes = list(
         map(lambda name: fuzz.partial_ratio(word, name.lower()), classes)
     )
@@ -61,12 +75,13 @@ def visit_id(wid):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("query")
+    parser.add_argument("--debug", action="store_true", help="Print debug output")
     args = parser.parse_args()
 
-    print(args.query)
+    DEBUG = args.debug
 
     root = display.Display().screen().root
-    # print(get_available_programs())
+    # _debug_print(get_available_programs())
     # execute_line("firefox")
 
     ids, names, classes = get_all_windows(root)
@@ -74,9 +89,9 @@ if __name__ == "__main__":
     names = np.array(names)
 
     sorted_match = best_match(args.query, classes, names)
-    print(ids[sorted_match])
-    print(names[sorted_match])
-    print("Going to")
-    print(ids[sorted_match[0]])
-    print(names[sorted_match[0]])
+    _debug_print(ids[sorted_match])
+    _debug_print(names[sorted_match])
+    _debug_print("Going to")
+    _debug_print(ids[sorted_match[0]])
+    _debug_print(names[sorted_match[0]])
     visit_id(ids[sorted_match[0]])
