@@ -1,0 +1,26 @@
+{
+  "applications": {
+    "gecko": {
+      "strict_min_version": "58.0a1"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Kaneda Debug",
+    "default_popup": "debug.html"
+  },
+  "description": "A list of methods you can perform on a tab.",
+  "homepage_url": "https://github.com/vauhochzett/kaneda",
+  "manifest_version": 2,
+  "name": "Kaneda",
+  "permissions": [
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "version": "1.0"
+}
