@@ -40,6 +40,9 @@ function redirect(requestDetails) {
   // var reqArr = requestDetails.url.split("/");
   // var tabId = reqArr[3];
 
+  // TODO #1 Close this tab
+  // TODO #2 Focus correct window
+
   browser.tabs.query({})
     .then((tabs) => {
       let numId = tabs[5].id;
