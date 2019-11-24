@@ -4,6 +4,7 @@ import argparse
 import csv
 import os
 import os.path
+import sys
 
 import numpy as np
 from fuzzywuzzy import fuzz
@@ -151,11 +152,13 @@ if __name__ == "__main__":
     print(total_ids)
     print(total_names)
 
-    if not args.dry_run:
-        if total_names[order[0]] == f"k '{args.query}'":
-            visit_id(total_ids[order[1]])
-            print(f"Going to ID {total_ids[order[1]]}, title {total_names[order[0]]}")
-            print(f"Going to ID {total_names[order]}")
-        else:
-            visit_id(total_ids[order[0]])
-            print(f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}")
+    if args.dry_run:
+        sys.exit(0)
+
+    if total_names[order[0]] == f"k '{args.query}'":
+        visit_id(total_ids[order[1]])
+        print(f"Going to ID {total_ids[order[1]]}, title {total_names[order[0]]}")
+        print(f"Going to ID {total_names[order]}")
+    else:
+        visit_id(total_ids[order[0]])
+        print(f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}")
