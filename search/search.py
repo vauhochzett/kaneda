@@ -19,9 +19,10 @@ def _debug_print(*args, **kwargs):
     if DEBUG:
         print(*args, **kwargs)
 
+
 def get_all_tabs():
     titles = []
-    wintabIds  = []
+    wintabIds = []
 
     with open(DLPATH) as csvDataFile:
         csvReader = csv.reader(csvDataFile)
@@ -68,17 +69,21 @@ def get_all_windows(root):
 
     return ids, names, classes
 
+
 def get_ratio_combined(word, classes, names):
     word = word.lower()
     _debug_print(classes)
 
-    ratio_classes = get_ratio(word, classes) 
+    ratio_classes = get_ratio(word, classes)
     ratio_names = get_ratio(word, names)
 
     return ratio_classes + ratio_names
 
+
 def get_ratio(word, names):
-    return np.array(list(map(lambda name: fuzz.partial_ratio(word, name.lower()), names)))
+    return np.array(
+        list(map(lambda name: fuzz.partial_ratio(word, name.lower()), names))
+    )
 
 
 def best_match(word, classes, names):
@@ -117,35 +122,32 @@ if __name__ == "__main__":
     names_arr: np.array = np.array(names)
 
     tab_ids, tab_names = get_all_tabs()
-    tab_ids_arr:   np.array = np.array(tab_ids)
+    tab_ids_arr: np.array = np.array(tab_ids)
     tab_names_arr: np.array = np.array(names)
 
     if not tab_ids:
         classes_names_ratio = get_ratio_combined(args.query, classes, names_arr)
-        order = np.argsort( - classes_names_ratio )
+        order = np.argsort(-classes_names_ratio)
 
-        total_names  = names_arr[order]
-        total_ids    = ids_arr[order]
-        
+        total_names = names_arr[order]
+        total_ids = ids_arr[order]
+
         _debug_print(f"Found IDs / names / classes (sorted): \n{ids_names_matrix}")
     else:
         classes_names_ratio = get_ratio_combined(args.query, classes, names_arr)
-        tabs_ratio          = get_ratio(args.query, tab_names)
-        
-        total_names   = np.concatenate([names_arr, tab_names])
-        total_ids     = list(ids_arr) + tab_ids
-        total_ratio   = np.concatenate([classes_names_ratio, tabs_ratio])
-        order = np.argsort( - total_ratio )
+        tabs_ratio = get_ratio(args.query, tab_names)
 
-        print(total_names [ order ])
+        total_names = np.concatenate([names_arr, tab_names])
+        total_ids = list(ids_arr) + tab_ids
+        total_ratio = np.concatenate([classes_names_ratio, tabs_ratio])
+        order = np.argsort(-total_ratio)
+
+        print(total_names[order])
         print(total_ids)
-
 
     ids_names_matrix: np.vstack = np.vstack([ids_arr, names_arr, np.array(classes)]).T
 
-    _debug_print(
-        f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}"
-    )
+    _debug_print(f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}")
     print(total_ids)
     print(total_names)
 
