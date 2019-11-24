@@ -87,4 +87,3 @@ browser.tabs.onCreated.addListener(doShit);
 browser.tabs.onUpdated.addListener(doShit);
 browser.tabs.onRemoved.addListener(doShit)
 browser.tabs.onReplaced.addListener(doShit)
-
