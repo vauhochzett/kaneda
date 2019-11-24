@@ -141,20 +141,24 @@ if __name__ == "__main__":
         total_ratio = np.concatenate([classes_names_ratio, tabs_ratio])
         order = np.argsort(-total_ratio)
 
-        print(total_names[order])
-        print(total_ids)
+        _debug_print(total_names[order])
+        _debug_print(total_ids)
 
     _debug_print(f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}")
-    print(total_ids)
-    print(total_names)
+    _debug_print(total_ids)
+    _debug_print(total_names)
 
     if args.dry_run:
         sys.exit(0)
 
     if total_names[order[0]] == f"k '{args.query}'":
         visit_id(total_ids[order[1]])
-        print(f"Going to ID {total_ids[order[1]]}, title {total_names[order[0]]}")
-        print(f"Going to ID {total_names[order]}")
+        _debug_print(
+            f"Going to ID {total_ids[order[1]]}, title {total_names[order[0]]}"
+        )
+        _debug_print(f"Going to ID {total_names[order]}")
     else:
         visit_id(total_ids[order[0]])
-        print(f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}")
+        _debug_print(
+            f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}"
+        )
