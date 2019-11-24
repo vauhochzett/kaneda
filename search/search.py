@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 
-DLPATH = "/home/frankzl/downloads/kaneda-tmp/test.txt"
-BASE_URL = "http://www.184213072193821491204721904321.xyz"
-
 import argparse
-import os
 import csv
+import os
+import os.path
 
 import numpy as np
 from fuzzywuzzy import fuzz
 from Xlib import display
 
-
+DLPATH = os.path.join(os.path.expanduser("~"), "downloads", "kaneda-tmp", "test.txt")
+BASE_URL = "http://www.184213072193821491204721904321.xyz"
 DEBUG = False
 FIREFOX_WINDOW = -1
 
