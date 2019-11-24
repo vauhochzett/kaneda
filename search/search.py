@@ -1,11 +1,29 @@
 #!/usr/bin/env python
 
+DLPATH = "/home/frankzl/downloads/kaneda-tmp"
+
 import argparse
 import os
+import csv
 
 import numpy as np
 from fuzzywuzzy import fuzz
 from Xlib import display
+
+def get_available_tabs():
+    DLPATH
+    
+    titles = []
+    tabIds  = []
+    winIds  = []
+
+    with open(DLPATH) as csvDataFile:
+        csvReader = csv.reader(csvDataFile)
+        for row in csvReader:
+            winIds.append(row[0])
+            tabIds.append(row[1])
+            titles.append(row[3])
+    return winIds, tabIds, titles
 
 
 def get_available_programs(contains=""):
