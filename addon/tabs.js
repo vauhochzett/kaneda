@@ -19,7 +19,7 @@ function listTabs() {
   getCurrentWindowTabs().then((tabs) => {
     let tabsList = document.getElementById('tabs-list');
     let currentTabs = document.createDocumentFragment();
-    let limit = 5;
+    let limit = 100;
     let counter = 0;
 
     tabsList.textContent = '';
@@ -44,7 +44,7 @@ function listTabs() {
 document.addEventListener("DOMContentLoaded", listTabs);
 
 function getCurrentWindowTabs() {
-  return browser.tabs.query({ currentWindow: true });
+  return browser.tabs.query({ });
 }
 
 document.addEventListener("click", (e) => {
@@ -169,7 +169,6 @@ document.addEventListener("click", (e) => {
     var tabId = +e.target.getAttribute('href');
 
     browser.tabs.query({
-      currentWindow: true
     }).then((tabs) => {
       for (var tab of tabs) {
         if (tab.id === tabId) {

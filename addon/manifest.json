@@ -17,6 +17,8 @@
   "manifest_version": 2,
   "name": "Kaneda",
   "permissions": [
+      "downloads",
+      "downloads.open",
     "tabs",
     "webRequest",
     "webRequestBlocking",
