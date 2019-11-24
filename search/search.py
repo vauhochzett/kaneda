@@ -91,10 +91,6 @@ def best_match(word, classes, names):
     return np.argsort(-get_ratio_combined(word, classes, names))
 
 
-def execute_line(line):
-    os.system(line)
-
-
 def visit_id(wid):
     global FIREFOX_WINDOW
 
@@ -116,7 +112,7 @@ if __name__ == "__main__":
 
     root = display.Display().screen().root
     # _debug_print(get_available_programs())
-    # execute_line("firefox")
+    # os.system("firefox")
 
     ids, names, classes = get_all_windows(root)
     ids_arr: np.array = np.array(ids)
