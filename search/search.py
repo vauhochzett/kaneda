@@ -122,6 +122,8 @@ if __name__ == "__main__":
     tab_ids_arr: np.array = np.array(tab_ids)
     tab_names_arr: np.array = np.array(names)
 
+    ids_names_matrix: np.vstack = np.vstack([ids_arr, names_arr, np.array(classes)]).T
+
     if not tab_ids:
         classes_names_ratio = get_ratio_combined(args.query, classes, names_arr)
         order = np.argsort(-classes_names_ratio)
@@ -141,8 +143,6 @@ if __name__ == "__main__":
 
         print(total_names[order])
         print(total_ids)
-
-    ids_names_matrix: np.vstack = np.vstack([ids_arr, names_arr, np.array(classes)]).T
 
     _debug_print(f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}")
     print(total_ids)
