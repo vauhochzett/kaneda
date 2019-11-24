@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-DLPATH = "/home/frankzl/downloads/kaneda-tmp"
+DLPATH = "/home/frankzl/downloads/kaneda-tmp/test.txt"
+BASE_URL = "http://www.184213072193821491204721904321.xyz"
 
 import argparse
 import os
@@ -12,26 +13,23 @@ from Xlib import display
 
 
 DEBUG = False
+FIREFOX_WINDOW = -1
 
 
 def _debug_print(*args, **kwargs):
     if DEBUG:
         print(*args, **kwargs)
 
-def get_available_tabs():
-    DLPATH
-    
+def get_all_tabs():
     titles = []
-    tabIds  = []
-    winIds  = []
+    wintabIds  = []
 
     with open(DLPATH) as csvDataFile:
         csvReader = csv.reader(csvDataFile)
         for row in csvReader:
-            winIds.append(row[0])
-            tabIds.append(row[1])
-            titles.append(row[3])
-    return winIds, tabIds, titles
+            wintabIds.append((row[0], row[1]))
+            titles.append(row[2])
+    return wintabIds, titles
 
 
 def get_available_programs(contains=""):
@@ -46,6 +44,8 @@ def get_available_programs(contains=""):
 
 
 def get_all_windows(root):
+    global FIREFOX_WINDOW
+
     names = []
     classes = []
     ids = []
@@ -59,6 +59,8 @@ def get_all_windows(root):
             name = grandchild.get_wm_name()
             _debug_print(f"  > {name} – {grandchild.id}")
             if name and "search.py " not in name:
+                if "Firefox" in name:
+                    FIREFOX_WINDOW = grandchild.id
                 names.append(name)
                 class_tuple = grandchild.get_wm_class()
                 classes.append(class_tuple[0] + class_tuple[1])
@@ -67,18 +69,21 @@ def get_all_windows(root):
 
     return ids, names, classes
 
-
-def best_match(word, classes, names):
+def get_ratio_combined(word, classes, names):
     word = word.lower()
     _debug_print(classes)
-    ratio_classes = list(
-        map(lambda name: fuzz.partial_ratio(word, name.lower()), classes)
-    )
-    ratio_names = list(map(lambda name: fuzz.partial_ratio(word, name), names))
 
-    total_ratio = np.array(ratio_classes) + np.array(ratio_names)
+    ratio_classes = get_ratio(word, classes) 
+    ratio_names = get_ratio(word, names)
 
-    return np.argsort(-total_ratio)
+    return ratio_classes + ratio_names
+
+def get_ratio(word, names):
+    return np.array(list(map(lambda name: fuzz.partial_ratio(word, name.lower()), names)))
+
+
+def best_match(word, classes, names):
+    return np.argsort(-get_ratio_combined(word, classes, names))
 
 
 def execute_line(line):
@@ -86,7 +91,13 @@ def execute_line(line):
 
 
 def visit_id(wid):
-    os.system("xdotool windowactivate --sync " + str(wid))
+    global FIREFOX_WINDOW
+
+    if type(wid) is not tuple:
+        os.system("xdotool windowactivate --sync " + str(wid))
+    else:
+        os.system("xdotool windowactivate --sync " + str(FIREFOX_WINDOW))
+        os.system(f"firefox {BASE_URL}/{wid[0]}/{wid[1]}")
 
 
 if __name__ == "__main__":
@@ -106,14 +117,35 @@ if __name__ == "__main__":
     ids_arr: np.array = np.array(ids)
     names_arr: np.array = np.array(names)
 
-    sorted_match = best_match(args.query, classes, names_arr)
+    tab_ids, tab_names = get_all_tabs()
+    tab_ids_arr:   np.array = np.array(tab_ids)
+    tab_names_arr: np.array = np.array(names)
+
+    if not tab_ids:
+        classes_names_ratio = get_ratio_combined(args.query, classes, names_arr)
+        order = np.argsort( - classes_names_ratio )
+
+        total_names  = names_arr[order]
+        total_ids    = ids_arr[order]
+        
+        _debug_print(f"Found IDs / names / classes (sorted): \n{ids_names_matrix}")
+    else:
+        classes_names_ratio = get_ratio_combined(args.query, classes, names_arr)
+        tabs_ratio          = get_ratio(args.query, tab_names)
+        
+        total_names   = np.concatenate([names_arr, tab_names])
+        total_ids     = list(ids_arr) + tab_ids
+        total_ratio   = np.concatenate([classes_names_ratio, tabs_ratio])
+        order = np.argsort( - total_ratio )
+
+        print(total_names [ order ])
+
 
     ids_names_matrix: np.vstack = np.vstack([ids_arr, names_arr, np.array(classes)]).T
 
-    _debug_print(f"Found IDs / names / classes (sorted): \n{ids_names_matrix}")
     _debug_print(
-        f"Going to ID {ids_arr[sorted_match[0]]}, title {names_arr[sorted_match[0]]}"
+        f"Going to ID {total_ids[order[0]]}, title {total_names[order[0]]}"
     )
 
     if not args.dry_run:
-        visit_id(ids[sorted_match[0]])
+        visit_id(total_ids[order[0]])
